@@ -52,3 +52,18 @@ sum_derivated <- function(){
     sum <- C[,1] %*% t(U[,1]) + C[,2] %*% t(U[,2]) + C[,3] %*% t(U[,3]) + C[,4] %*% t(U[,4])
     # We find the difference between the value and the average
 }
+princomp_notes <- function(){
+    pca <- prcomp(corr.acp[2:5])
+    # Standard derivation
+    pca$sdev
+    # Loadings :
+    pca$rotation
+    # Loadings = eigen vectors * eigen value
+    # loadings are the covariances/correlations between the original variables and the unit-scaled components.
+    summary(pca)
+    # Porportion of variance : show which PC is the best to describe the data
+    biplot(pca)
+    # Plot the data in the new PC plan
+    plot(pca)
+    # Variance
+}
