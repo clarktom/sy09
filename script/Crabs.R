@@ -11,6 +11,9 @@ library(grid)
 library(gridExtra)
 library(reshape2)
 library(ggplot2)
+library(devtools)
+# install_github("ggbiplot", "vqv")
+library(ggbiplot)
 data(crabs)
 crabsquant <- crabs[,4:8]
 
@@ -46,4 +49,14 @@ find_specie <- function(){
     # We can determine the specie this time but not the sex
     # p6 <- ggplot(crabs, aes(x=CW, color=sex)) + geom_histogram(binwidth=0.5) + ggtitle("Carapace lenth histogram")
 }
-
+pca_crabs <- function(){
+    pca_crabs <- prcomp(crabsquant)
+    g <- ggbiplot(pca_crabs, obs.scale = 1, var.scale = 1,
+                groups = crabs$sex, ellipse = TRUE,
+                circle = TRUE)
+    # Replace crabs$sex by crabs$specie in order to show the wanted groups
+    g <- g + scale_color_discrete(name = '')
+    g <- g + theme(legend.direction = 'horizontal',
+                legend.position = 'top')
+    print(g)
+}
