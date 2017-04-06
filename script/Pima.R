@@ -4,7 +4,7 @@ library(ggplot2)
 library(reshape2)
 library(devtools)
 library(ggbiplot)
-Pima <- read.csv("dataset/Pima.csv", header=T)
+Pima <- read.csv("sy09/script/dataset/Pima.csv", header=T)
 Pima$z <- factor(Pima$z)
 Pimaquant = Pima[1:7]
 

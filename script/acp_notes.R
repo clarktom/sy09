@@ -1,3 +1,11 @@
+library(grid)
+library(gridExtra)
+library(reshape2)
+library(ggplot2)
+library(devtools)
+# install_github("ggbiplot", "vqv")
+library(ggbiplot)
+
 notes <- read.csv("dataset/sy02-p2016.csv")
 moy.median <- aggregate(note.median~correcteur.median, data=notes, FUN=mean)
 names(moy.median) <- c("correcteur","moy.median")
@@ -72,6 +80,19 @@ princomp_notes <- function(){
 pca_notes <- function()
 {
     pca_notes <- prcomp(corr.acp[2:5])
+    g <- ggbiplot(pca_notes, obs.scale = 1, var.scale = 1)
+    g <- g + scale_color_discrete(name = '')
+    g <- g + theme(legend.direction = 'horizontal',
+                legend.position = 'top')
+    print(g)
+}
+pca_notes_corrected <- function(){
+    # Recreate the matrix using mean values from the caracteristics
+    correcteurs[8,2] <- mean(corr.acp$moy.median)
+    correcteurs[8,3] <- mean(corr.acp$std.median)
+    correcteurs[2,4] <- mean(corr.acp$moy.final)
+    correcteurs[2,5] <- mean(corr.acp$std.final)
+    pca_notes <- prcomp(correcteurs[2:5])
     g <- ggbiplot(pca_notes, obs.scale = 1, var.scale = 1)
     g <- g + scale_color_discrete(name = '')
     g <- g + theme(legend.direction = 'horizontal',
