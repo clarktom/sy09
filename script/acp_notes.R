@@ -49,8 +49,10 @@ plot_corr <- function(){
     # abline(h=0);abline(v=0)
 }
 sum_derivated <- function(){
-    sum <- C[,1] %*% t(U[,1]) + C[,2] %*% t(U[,2]) + C[,3] %*% t(U[,3]) + C[,4] %*% t(U[,4])
+    sumi <- C[,1] %*% t(U[,1]) + C[,2] %*% t(U[,2]) + C[,3] %*% t(U[,3]) + C[,4] %*% t(U[,4])
     # We find the difference between the value and the average
+    # Equal to X because C is X %*% U and we "cut" the U
+    sumi
 }
 princomp_notes <- function(){
     pca <- prcomp(corr.acp[2:5])
@@ -66,4 +68,13 @@ princomp_notes <- function(){
     # Plot the data in the new PC plan
     plot(pca)
     # Variance
+}
+pca_notes <- function()
+{
+    pca_notes <- prcomp(corr.acp[2:5])
+    g <- ggbiplot(pca_notes, obs.scale = 1, var.scale = 1)
+    g <- g + scale_color_discrete(name = '')
+    g <- g + theme(legend.direction = 'horizontal',
+                legend.position = 'top')
+    print(g)
 }
