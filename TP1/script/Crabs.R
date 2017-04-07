@@ -11,14 +11,16 @@ library(grid)
 library(gridExtra)
 library(reshape2)
 library(ggplot2)
+library(devtools)
+# install_github("ggbiplot", "vqv")
+library(ggbiplot)
 data(crabs)
 crabsquant <- crabs[,4:8]
+library(GGally)
 
 melt_crabs <- function()
 {
-    cormat_original <- cor(crabsquant)
-    melted_cormat_o <- melt(cormat_original)
-    ggplot(data = melted_cormat_o, aes(x=Var1, y=Var2, fill=value)) + geom_tile() + ggtitle("matrice de correlation")
+    ggcorr(crabsquant, limits=c(0,1))
 }
 find_sex  <-  function()
 {
@@ -31,7 +33,7 @@ find_sex  <-  function()
     # Equation :
     #eq = paste0("y = ", coeff[2], "*x + ", coeff[1])
     # Graph
-    sp <- ggplot(data=crabs, aes(x=FL, y=RW, color=sex)) + geom_point() + ggtitle("Influence of sex")
+    sp <- ggplot(data=crabs, aes(x=CW, y=RW, color=sex)) + geom_point() + ggtitle("Influence of sex")
     sp + stat_smooth(method="lm",se=FALSE)
 }
 find_specie <- function(){
@@ -41,9 +43,17 @@ find_specie <- function(){
     # p4 <- ggplot(data = crabs, aes(x=sex,CL)) + geom_boxplot(outlier.colour="red") + ggtitle("Boxplot for sex under carace length")
     # We can try to plot carapace dimension in order to determine the specie
     # p5 <- ggplot(data = crabs, aes(x=CL, y=CW, color=sex)) + geom_point() + ggtitle("Carapace dimension")
-    sp <- ggplot(data = crabs, aes(x=CL, y=CW, color=sp)) + geom_point() + ggtitle("Carapace dimension")
+    sp <- ggplot(data = crabs, aes(x=RW, y=CW, color=sp)) + geom_point() + ggtitle("Carapace dimension")
     sp + stat_smooth(method="lm", se=FALSE)
     # We can determine the specie this time but not the sex
     # p6 <- ggplot(crabs, aes(x=CW, color=sex)) + geom_histogram(binwidth=0.5) + ggtitle("Carapace lenth histogram")
 }
-
+pca_crabs_ <- function(){
+    pca_crabs2 <- prcomp(crabsquant)
+    g <- ggbiplot(pca_crabs2,choice=1:2)
+    # Replace crabs$sex by crabs$specie in order to show the wanted groups
+    g <- g + scale_color_discrete(name = '')
+    g <- g + theme(legend.direction = 'horizontal',
+                legend.position = 'top')
+    print(g)
+}

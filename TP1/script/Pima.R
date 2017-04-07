@@ -2,7 +2,9 @@ library(grid)
 library(gridExtra)
 library(ggplot2)
 library(reshape2)
-Pima <- read.csv("dataset/Pima.csv", header=T)
+library(devtools)
+library(ggbiplot)
+Pima <- read.csv("sy09/script/dataset/Pima.csv", header=T)
 Pima$z <- factor(Pima$z)
 Pimaquant = Pima[1:7]
 
@@ -41,4 +43,15 @@ influ_diabete  <- function()
     geom_histogram(fill="white", alpha=0.5, position="identity")
   grid.arrange(p1, p3, p2, p4, p5, ncol=3, top="Influence diabete")
 
+}
+pca_pima <- function(){
+    pca_pima2 <- prcomp(Pimaquant)
+    g <- ggbiplot(pca_pima2, obs.scale = 1, var.scale = 1, choice=c(1,3),
+         groups = Pima$z, ellipse = TRUE,
+         circle = TRUE)
+    # Replace crabs$sex by crabs$specie in order to show the wanted groups
+    g <- g + scale_color_discrete(name = '')
+    g <- g + theme(legend.direction = 'horizontal',
+         legend.position = 'top')
+    print(g)
 }
