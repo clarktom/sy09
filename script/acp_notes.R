@@ -3,10 +3,11 @@ library(gridExtra)
 library(reshape2)
 library(ggplot2)
 library(devtools)
-# install_github("ggbiplot", "vqv")
+#install_github("ggbiplot", "vqv")
 library(ggbiplot)
+library(ggfortify)
 
-notes <- read.csv("dataset/sy02-p2016.csv")
+notes <- read.csv("sy09/script/dataset/sy02-p2016.csv")
 moy.median <- aggregate(note.median~correcteur.median, data=notes, FUN=mean)
 names(moy.median) <- c("correcteur","moy.median")
 std.median <- aggregate(note.median~correcteur.median, data=notes, FUN=sd)
@@ -38,14 +39,12 @@ CTR <- (1/n)*C^2 %*% diag(1/diag(L))
 # Représentation des variables
 D <- diag(1/(sqrt((n-1)/n)*apply(X, 2, sd))) %*% U %*% sqrt(L)
 plot_1_2 <- function(){
-    # Tracé des graphiques
-    plot(-1:1,-1:1,type="n",xlab="Axe 1",ylab="Axe 2")
-    text(D[,1],D[,2],colnames(corr.acp));abline(h=0);abline(v=0)
-    curve(sqrt(1-x^2),-1,1,add=TRUE)
-    curve(-sqrt(1-x^2),-1,1,add=TRUE)
+  pca_a <- princomp(corr.acp[2:5])
+  autoplot(pca_a, loadings = TRUE, loadings.colour = 'blue',
+           loadings.label = TRUE, loadings.label.size = 3)
 }
 plot_1_3 <- function(){
-    plot(-1:1,-1:1,type="n",xlab="Axe 1",ylab="Axe 3")
+    plot(-1.5:1.5,-1.5:1.5,type="n",xlab="Axe 1",ylab="Axe 3")
     text(D[,1],D[,3],colnames(corr.acp));abline(h=0);abline(v=0)
     curve(sqrt(1-x^2),-1,1,add=TRUE)
     curve(-sqrt(1-x^2),-1,1,add=TRUE)
@@ -60,7 +59,7 @@ sum_derivated <- function(){
     sumi <- C[,1] %*% t(U[,1]) + C[,2] %*% t(U[,2]) + C[,3] %*% t(U[,3]) + C[,4] %*% t(U[,4])
     # We find the difference between the value and the average
     # Equal to X because C is X %*% U and we "cut" the U
-    sumi
+    xtable(sumi)
 }
 princomp_notes <- function(){
     pca <- prcomp(corr.acp[2:5])
@@ -77,7 +76,7 @@ princomp_notes <- function(){
     plot(pca)
     # Variance
 }
-pca_notes <- function()
+pca_notes_ <- function()
 {
     pca_notes <- prcomp(corr.acp[2:5])
     g <- ggbiplot(pca_notes, obs.scale = 1, var.scale = 1)
@@ -93,7 +92,7 @@ pca_notes_corrected <- function(){
     correcteurs[2,4] <- mean(corr.acp$moy.final)
     correcteurs[2,5] <- mean(corr.acp$std.final)
     pca_notes <- prcomp(correcteurs[2:5])
-    g <- ggbiplot(pca_notes, obs.scale = 1, var.scale = 1)
+    g <- ggbiplot(pca_notes, obs.scale = 1, var.scale = 1, choice=c(1,2))
     g <- g + scale_color_discrete(name = '')
     g <- g + theme(legend.direction = 'horizontal',
                 legend.position = 'top')
