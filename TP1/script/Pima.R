@@ -4,7 +4,7 @@ library(ggplot2)
 library(reshape2)
 library(devtools)
 library(ggbiplot)
-Pima <- read.csv("sy09/script/dataset/Pima.csv", header=T)
+Pima <- read.csv("TP1/script/dataset/Pima.csv", header=T)
 Pima$z <- factor(Pima$z)
 Pimaquant = Pima[1:7]
 
@@ -46,7 +46,7 @@ influ_diabete  <- function()
 }
 pca_pima <- function(){
     pca_pima2 <- prcomp(Pimaquant)
-    g <- ggbiplot(pca_pima2, obs.scale = 1, var.scale = 1, choice=c(1,3),
+    g <- ggbiplot(pca_pima2, obs.scale = 1, var.scale = 1, choice=c(2,3),
          groups = Pima$z, ellipse = TRUE,
          circle = TRUE)
     # Replace crabs$sex by crabs$specie in order to show the wanted groups
