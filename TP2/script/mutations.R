@@ -1,3 +1,6 @@
+library(ggdendro)
+library(dplyr)
+library(ggplot2)
 mut <- read.csv("TP2/dataset/mutations2.csv", header=T, row.names=1)
 mut <- as.dist(mut, diag=T, upper=T)
 
@@ -20,5 +23,28 @@ plot_aftd_ACP <- function(){
 }
 
 plot_hclust <- function(){
-  plot(hclust(mut))
+  clusters <- hclust(mut)
+  clusterCut <- cutree(clusters, 3)
+  clusterCut2 <- rect.hclust(clusters,5)
+  plot(clusters)
+  #identify(clusters)
+  clusterCut2 
+  #plot(clusterCut2)
 }
+
+mds_aftd <- function(){
+  hc <- hclust(mut, method="ward.D2")
+  cut <- as.data.frame(cutree(hc, k=7))
+  names(cut) <- "cut"
+  cut$names <- rownames(cut)
+  
+  hcdata <- dendro_data(hc, type="triangle")
+  hcdata$labels <- left_join(hcdata$labels, cut, by=c("label"="names"))
+  
+  ggplot(hcdata$segments) + 
+    geom_segment(aes(x = x, y = y, xend = xend, yend = yend))+
+    geom_text(data = hcdata$labels, aes(x, y, label = label, colour=factor(cut)), 
+              hjust = 1, size = 2.9) + scale_colour_discrete(name = "clusters") +
+    labs(x="", y="") +  coord_flip() + ylim(-1, 100) + xlim(0,20)  + theme_bw()
+}
+
