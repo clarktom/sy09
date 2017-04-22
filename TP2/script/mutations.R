@@ -46,5 +46,15 @@ mds_aftd <- function(){
     geom_text(data = hcdata$labels, aes(x, y, label = label, colour=factor(cut)), 
               hjust = 1, size = 2.9) + scale_colour_discrete(name = "clusters") +
     labs(x="", y="") +  coord_flip() + ylim(-1, 100) + xlim(0,20)  + theme_bw()
+  
+  mds.cmdscale <- as.data.frame(cmdscale(as.matrix()))
+  mds.cmdscale$names <- rownames(mds.cmdscale)
+  mds.cmdscale$cut <- cut$cut
+  ggplot(mds.cmdscale, aes(V1, V2, label=names)) + 
+    geom_point(aes(colour=factor(cut)), size=2.3) +
+    geom_text(aes(colour=factor(cut)), check_overlap = TRUE, size=2.2, 
+              hjust = "center", vjust = "bottom", nudge_x = 0, nudge_y = 0.005) + 
+    scale_colour_discrete(name = "clusters") +
+    labs(x="", y="", title="MDS by Jaccard and cmdscale()") + theme_bw()
 }
 
