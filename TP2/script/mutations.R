@@ -1,6 +1,7 @@
 library(ggdendro)
 library(dplyr)
 library(ggplot2)
+library(MASS)
 mut <- read.csv("TP2/dataset/mutations2.csv", header=T, row.names=1)
 mut <- as.dist(mut, diag=T, upper=T)
 
