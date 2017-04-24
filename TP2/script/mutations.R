@@ -24,13 +24,29 @@ plot_aftd_ACP <- function(){
 }
 
 plot_hclust <- function(){
-  clusters <- hclust(mut)
-  clusterCut <- cutree(clusters, 3)
-  clusterCut2 <- rect.hclust(clusters,5)
-  plot(clusters)
-  #identify(clusters)
-  clusterCut2 
-  #plot(clusterCut2)
+  # A number of different clustering methods are provided. 
+  # Ward's minimum variance method aims at finding compact, spherical clusters. 
+  # The complete linkage method finds similar clusters. 
+  # The single linkage method (which is closely related to the minimal spanning tree) adopts a ‘friends of friends’ clustering strategy. 
+  # The other methods can be regarded as aiming for clusters with characteristics somewhere between the single and complete link methods.
+  # Note however, that methods "median" and "centroid" are not leading to a monotone distance measure,
+  # or equivalently the resulting dendrograms can have so called inversions or reversals which are hard to interpret, 
+  # but note the trichotomies in Legendre and Legendre (2012). 
+  dendo<-hclust(mut,method="ward.D2") #classification ascendante
+  dendo2<-hclust(mut,method="single") 
+  dendo3<-hclust(mut,method="complete") 
+  dendo4<-hclust(mut,method="average") 
+  dendo5<-hclust(mut,method="mcquitty") 
+  dendo6<-hclust(mut,method="median") 
+  dendo7<-hclust(mut,method="centroid") 
+  p1 <- ggdendrogram(dendo, rotate = FALSE, size = 2) + ggtitle("method : ward.D2")
+  p2 <- ggdendrogram(dendo2, rotate = FALSE, size = 2) + ggtitle("method : single")
+  p3 <- ggdendrogram(dendo3, rotate = FALSE, size = 2) + ggtitle("method : complete")
+  p4 <- ggdendrogram(dendo4, rotate = FALSE, size = 2) + ggtitle("method : average")
+  p5 <- ggdendrogram(dendo5, rotate = FALSE, size = 2) + ggtitle("method : mcquitty")
+  p6 <- ggdendrogram(dendo6, rotate = FALSE, size = 2) + ggtitle("method : median")
+  p7 <- ggdendrogram(dendo7, rotate = FALSE, size = 2) + ggtitle("method : centroid")
+  multiplot(p1, p2, p3, p4, p5, p6, p7, cols = 3)
 }
 
 mds_aftd <- function(){
@@ -58,4 +74,41 @@ mds_aftd <- function(){
     scale_colour_discrete(name = "clusters") +
     labs(x="", y="", title="MDS by Jaccard and cmdscale()") + theme_bw()
 }
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
 
