@@ -7,7 +7,7 @@ library(devtools)
 library(ggbiplot)
 library(ggfortify)
 
-notes <- read.csv("sy09/script/dataset/sy02-p2016.csv")
+notes <- read.csv("TP1/script/dataset/sy02-p2016.csv")
 moy.median <- aggregate(note.median~correcteur.median, data=notes, FUN=mean)
 names(moy.median) <- c("correcteur","moy.median")
 std.median <- aggregate(note.median~correcteur.median, data=notes, FUN=sd)
@@ -92,9 +92,12 @@ pca_notes_corrected <- function(){
     correcteurs[2,4] <- mean(corr.acp$moy.final)
     correcteurs[2,5] <- mean(corr.acp$std.final)
     pca_notes <- prcomp(correcteurs[2:5])
-    g <- ggbiplot(pca_notes, obs.scale = 1, var.scale = 1, choice=c(1,2))
-    g <- g + scale_color_discrete(name = '')
-    g <- g + theme(legend.direction = 'horizontal',
-                legend.position = 'top')
-    print(g)
+    pca_test = pca_notes
+    pca_test$x=pca_test$x[,c(1,3)]
+    colnames(pca_test$x)=c("PC1","PC2")
+    pca_test$rotation=pca_test$rotation[,c(1,3)]
+    colnames(pca_test$rotation)=c("PC1","PC2")
+    autoplot(pca_notes,data=correcteurs, loadings = TRUE, loadings.colour = 'red',
+             loadings.label = TRUE, loadings.label.size = 3)
+
 }
