@@ -43,7 +43,7 @@ hclust_iris_dist <- function(){
   # And plot:
   par(mar = c(3,3,3,7))
   plot(dend, 
-       main = "Clustered Iris data set", 
+       main = "Ascending Clustered Iris data set", 
        horiz =  TRUE,  nodePar = list(cex = .006))
   legend("topleft", legend = iris_species, fill = rainbow_hcl(3))
 }
@@ -77,7 +77,7 @@ hclust_iris_diana <- function(){
   # And plot:
   par(mar = c(3,3,3,7))
   plot(dend, 
-       main = "Clustered Iris data set", 
+       main = "Descending Clustered Iris data set", 
        horiz =  TRUE,  nodePar = list(cex = .007))
   legend("topleft", legend = iris_species, fill = rainbow_hcl(3))
 }
