@@ -39,7 +39,7 @@ plot_hclust <- function(){
   dendo5<-hclust(mut,method="mcquitty") 
   dendo6<-hclust(mut,method="median") 
   dendo7<-hclust(mut,method="centroid") 
-  p1 <- ggdendrogram(dendo, rotate = FALSE, size = 2) + ggtitle("method : ward.D2")
+  p1 <- ggdendrogram(dendo, rotate = FALSE, size = 3) + ggtitle("method : ward.D2")
   p2 <- ggdendrogram(dendo2, rotate = FALSE, size = 2) + ggtitle("method : single")
   p3 <- ggdendrogram(dendo3, rotate = FALSE, size = 2) + ggtitle("method : complete")
   p4 <- ggdendrogram(dendo4, rotate = FALSE, size = 2) + ggtitle("method : average")

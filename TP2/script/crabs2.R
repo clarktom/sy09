@@ -1,10 +1,19 @@
 library(ggfortify)
+library(RColorBrewer)
 crabs <- read.csv("TP2/dataset/crabs2.csv", header=T)
 summary(crabs)
-crabsquant <- crabs2[1:4]
-crabs$grp <- rep(1:4, each = 50)
+crabsquant <- crabs[1:4]
+crabs$grp <- rep(LETTERS[1:4], each = 50)
+
+# Change colors 
+myColors <- brewer.pal(4,"Set1")
+names(myColors) <- levels(crabs$grp)
+colScale <- scale_colour_manual(name = "grp",values = myColors)
 visualisation_crabs <- function(){
   pca_crabs <- prcomp(crabsquant)
-  autoplot(pca_crabs, data=crabs,loadings = TRUE, loadings.colour = 'blue',
-           loadings.label = TRUE, loadings.label.size = 3)
+  # plot without colors
+  p1 <- ggplot(pca_crabs,aes(PC1,PC2)) + geom_point()
+  # plot with colors
+  p2 <- ggplot(pca_crabs,aes(PC1,PC2,colour = crabs$grp)) + geom_point() + colScale
+  p1
 }
