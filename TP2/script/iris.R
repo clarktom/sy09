@@ -16,14 +16,14 @@ visualisation <- function(){
 hclust_iris_dist <- function(){
   d_iris <- dist(irisquant)
   hc_iris <- hclust(d_iris, method = "complete")
-  iris_species <- rev(levels(iris[,5]))
+  iris_species <- rev(c("virginica", "versicolor", "setosa"))
   
   dend <- as.dendrogram(hc_iris)
   # order it the closest we can to the order of the observations:
   dend <- rotate(dend, 1:150)
   
   # Color the branches based on the clusters:
-  dend <- color_branches(dend, k=3) #, groupLabels=iris_species)
+  dend <- color_branches(dend, k=3, groupLabels = iris_species) #, groupLabels=iris_species)
   
   # Manually match the labels, as much as possible, to the real classification of the flowers:
    labels_colors(dend) <-
@@ -50,14 +50,14 @@ hclust_iris_dist <- function(){
 
 hclust_iris_diana <- function(){
   hc_iris <- diana(irisquant) 
-  iris_species <- rev(levels(iris[,5]))
+  iris_species <- rev(c("virginica", "versicolor", "setosa"))
   
   dend <- as.dendrogram(hc_iris)
   # order it the closest we can to the order of the observations:
   dend <- rotate(dend, 1:150)
   
   # Color the branches based on the clusters:
-  dend <- color_branches(dend, k=3) #, groupLabels=iris_species)
+  dend <- color_branches(dend, k=3, groupLabels = iris_species) #, groupLabels=iris_species)
   
   # Manually match the labels, as much as possible, to the real classification of the flowers:
    labels_colors(dend) <-

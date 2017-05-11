@@ -46,7 +46,8 @@ plot_hclust <- function(){
   p5 <- ggdendrogram(dendo5, rotate = FALSE, size = 2) + ggtitle("method : mcquitty")
   p6 <- ggdendrogram(dendo6, rotate = FALSE, size = 2) + ggtitle("method : median")
   p7 <- ggdendrogram(dendo7, rotate = FALSE, size = 2) + ggtitle("method : centroid")
-  multiplot(p1, p2, p3, p4, p5, p6, p7, cols = 3)
+  #multiplot(p1, p2, p3, p4, p5, p6, p7, cols = 2)
+  p7
 }
 
 mds_aftd <- function(){

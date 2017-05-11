@@ -35,3 +35,4 @@ vignettes/*.pdf
 
 # Remove png pictures
 *.png
+.Rproj.user
