@@ -4,6 +4,34 @@ library(ggplot2)
 library(MASS)
 mut <- read.csv("TP2/dataset/mutations2.csv", header=T, row.names=1)
 mut <- as.dist(mut, diag=T, upper=T)
+library(broom)
+library(cluster)
+
+iner_kmeans <- function(){
+  iner_mut_k3 <- matrix(0, nrow=300, 1)
+  for(k in 1:1)
+  {
+    for (i in 1:300){
+      iner_mut_k3[i,k] <-kmeans(mut2$points,3)$tot.withinss
+    }
+  }
+  # mut K=1
+  min(iner_mut_k3[,1])
+  median(iner_mut_k3[,1])
+  iner_mut_k3$c1 = iner_mut_k3[,1]
+  ggplot(as.data.frame(iner_mut_k3), aes(x=factor(0),c1)) + geom_boxplot() + xlab("X") + ylab("Inertie interclasse")
+}
+
+plot_kmeans <- function(){
+  mut2<-cmdscale(mut,k=5, eig=TRUE)
+  k=kmeans(mut2$points,3)
+  plot(mut2$points[,1], mut2$points[,2], col=k$cluster, xlab="Comp1", ylab="Comp2", main = "Représentation des individus dans le premier plan factoriel")
+  mut2$pc1 <- mut2$points[,1]
+  mut2$pc2 <- mut2$points[,2]
+  mut2$grp <- k$cluster
+  ggplot(as.data.frame(mut2$points)) + geom_point(aes(x = mut2$pc1, y = mut2$pc2), color=k$cluster)
+  
+}
 
 qualite <- function(eig_val, k){  
   sum(eig_val[1:k])/ sum(eig_val) *100 
@@ -11,7 +39,7 @@ qualite <- function(eig_val, k){
 
 plot_aftd <- function(nombre_pre){
   AFTD <- cmdscale(mut, eig=TRUE, nombre_pre) 
-  plot(Shepard(mut, AFTD$points), xlab="Proximités", ylab="Distances", main=paste("Diagramme de Sphepard des données crabs2 k =",toString(nombre_pre)))
+  plot(Shepard(mut, AFTD$points), xlab="Proximités", ylab="Distances", main=paste("Shepard à ",toString(nombre_pre), "dimensions"))
   abline(a=0,b=1,col="blue") 
   qualite(AFTD$eig,nombre_pre) 
 }

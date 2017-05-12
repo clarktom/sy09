@@ -3,7 +3,7 @@ library(RColorBrewer)
 crabs <- read.csv("TP2/dataset/crabs2.csv", header=T)
 summary(crabs)
 crabsquant <- crabs[1:4]
-crabs$grp <- rep(LETTERS[1:4], each = 50)
+crabs$grp <- rep(c("Blue Male", "Blue Female", "Orange Male", "Orange Female"), each = 50)
 
 # Change colors 
 myColors <- brewer.pal(4,"Set1")
@@ -15,5 +15,5 @@ visualisation_crabs <- function(){
   p1 <- ggplot(pca_crabs,aes(PC1,PC2)) + geom_point()
   # plot with colors
   p2 <- ggplot(pca_crabs,aes(PC1,PC2,colour = crabs$grp)) + geom_point() + colScale
-  p1
+  p2
 }
