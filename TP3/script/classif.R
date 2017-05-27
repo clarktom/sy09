@@ -21,7 +21,6 @@ ceuc.app <- function(Xapp, zapp){
 ceuc.val <- function(mu, Xtst) {
   etiquette<-matrix(,nrow=nrow(Xtst),1)
   distTab <- distXY(mu, Xtst)
-  print(distTab)
   for (i in 1:(nrow(Xtst))){
     etiquette[i,] <- which.min(distTab[,i])
   }
@@ -61,6 +60,7 @@ kppv.val<-function(Xapp,zapp,K,Xtst){
   }
   z
 }
+
 kppv.tune <- function(Xapp, zapp, Xval, zval, nppv) {
   Xapp <- as.matrix(Xapp)
   Xval <- as.matrix(Xval)
@@ -68,11 +68,19 @@ kppv.tune <- function(Xapp, zapp, Xval, zval, nppv) {
   zval <- as.vector(zval)
   res = c(1:length(nppv)) #contiendra le taux d'erreur pour chaque valeur de ppv
   for(i in 1:length(nppv)) { #Pour chaque valeur de ppv
-    ztst <- kppv.val(Xapp, zapp, i, Xval) #On cherche le vecteur des étiquettes
-    res[i] <- mean(abs(zval-ztst)) #On soustrait les deux vecteurs et on fait la moyenne de la val abs
+    kppv_v <- kppv.val(Xapp, zapp, i, Xval) #On cherche le vecteur des étiquettes
+    res[i] <- sum(zval == kppv_v)
   }
   res
 }
+
+# X2 = separ1(X, z)
+# Xapp <- as.matrix(X2$Xapp)
+# zapp <- X2$zapp
+# Xtst <- as.matrix(X2$Xtst)
+# ztst <- X2$ztst
+# n = length(zapp)
+# l2 <- kppv.tune(Xapp, zapp, Xapp, zapp, c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
 
 estimation_params <- function(X,z){
   # fonction qui renvoie le mu, sigma et pi (c.f cours page 94)
@@ -99,6 +107,16 @@ estimation_params <- function(X,z){
   params$pi <- pi
   params
 }
+
+# all_dataset <- list(Synth1_40, Synth1_100, Synth1_1000, Synth2_1000)
+# 
+# for (dataset in all_dataset) {
+#   X <- learningSet[, 1 : 2]
+#   z <- learningSet[, 3]
+#   res <- estimation_params(X,z)
+#   
+#   print(res)
+# }
 
 erreur_ceuc <- function(N,X,z){
   err_app <- c()
@@ -147,3 +165,40 @@ taux_intervalle <- function(N,err_app, err_tst) {
   res$tst_inter_droite <- tst_intervalle_droite
   res
 }
+
+# errorCeuc <- erreur_ceuc(20,X,z)
+# taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
+
+erreur_kppv <- function(N,X,z){
+  err_app <- c()
+  err_tst <- c()
+  for(i in 1:N){
+    splitted <- separ2(X,z)
+    Xapp <- splitted$Xapp
+    zapp <- splitted$zapp
+    Xval <- splitted$Xval
+    zval <- splitted$zval
+    Xtst <- splitted$Xtst
+    ztst <- splitted$ztst
+    K <- which.max(kppv.tune(Xapp, zapp, Xval, zval, c(2, 3, 4, 5, 6, 7, 8, 9, 10)))
+    res_zapp <- kppv.val(Xapp, zapp, K, Xapp)
+    res_ztst <- kppv.val(Xapp, zapp, K, Xtst)
+    err_app[i] <- 1 - sum(zapp == res_zapp) / length(zapp)
+    err_tst[i] <- 1 - sum(ztst == res_ztst) / length(zapp)
+  }
+  res <- NULL
+  res$err_app <- err_app
+  res$err_tst <- err_tst
+  res
+}
+
+# errorKppv = erreur_kppv(20, X, z)
+# taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
+
+X <- Synth2_1000[, 1 : 2]
+z <- Synth2_1000[, 3]
+params_synth2_1000 <- estimation_params(X,z)
+errorCeuc <- erreur_ceuc(20,X,z)
+taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
+errorKppv = erreur_kppv(20, X, z)
+taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
