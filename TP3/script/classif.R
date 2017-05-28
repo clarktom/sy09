@@ -3,6 +3,8 @@ Synth1_40 <- read.csv("TP3/dataset/donnees-tp3/Synth1-40.csv")
 Synth1_40$title <- "synth1_40"
 Synth1_100 <- read.csv("TP3/dataset/donnees-tp3/Synth1-100.csv")
 Synth1_100$title <- "synth1_100"
+Synth1_500 <- read.csv("TP3/dataset/donnees-tp3/Synth1-500.csv")
+Synth1_500$title <- "synth1_500"
 Synth1_1000 <- read.csv("TP3/dataset/donnees-tp3/Synth1-1000.csv")
 Synth1_1000$title <- "synth1_1000"
 Synth2_1000 <- read.csv("TP3/dataset/donnees-tp3/Synth2-1000.csv")
@@ -78,14 +80,6 @@ kppv.tune <- function(Xapp, zapp, Xval, zval, nppv) {
   res
 }
 
-# X2 = separ1(X, z)
-# Xapp <- as.matrix(X2$Xapp)
-# zapp <- X2$zapp
-# Xtst <- as.matrix(X2$Xtst)
-# ztst <- X2$ztst
-# n = length(zapp)
-# l2 <- kppv.tune(Xapp, zapp, Xapp, zapp, c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
-
 estimation_params <- function(X,z){
   # fonction qui renvoie le mu, sigma et pi (c.f cours page 94)
   # mu = centre de gravité 
@@ -113,15 +107,15 @@ estimation_params <- function(X,z){
   params
 }
 
-all_dataset <- list(Synth1_40, Synth1_100, Synth1_1000, Synth2_1000)
+all_dataset <- list(Synth1_40, Synth1_100, Synth1_500, Synth1_1000)
 
-for (dataset in all_dataset) {
-  X <- dataset[, 1 : 2]
-  z <- dataset[, 3]
-  res <- estimation_params(X,z)
-  print(dataset$title)
-  print(res)
-}
+# for (dataset in all_dataset) {
+#   X <- dataset[, 1 : 2]
+#   z <- dataset[, 3]
+#   res <- estimation_params(X,z)
+#   print(dataset$title)
+#   print(res)
+# }
 
 erreur_ceuc <- function(N,X,z){
   err_app <- c()
@@ -135,8 +129,8 @@ erreur_ceuc <- function(N,X,z){
     mu <- ceuc.app(Xapp,zapp)
     res_zapp <- ceuc.val(mu, Xapp)
     res_ztst <- ceuc.val(mu, Xtst)
-    err_app[i] <- 1 - sum(zapp == res_zapp) / length(zapp)
-    err_tst[i] <- 1 - sum(ztst == res_ztst) / length(zapp)
+    err_app[i] <- 1 - (sum(zapp == res_zapp) / length(zapp))
+    err_tst[i] <- 1 - (sum(ztst == res_ztst) / length(zapp))
   }
   res <- NULL
   res$err_app <- err_app
@@ -155,8 +149,8 @@ taux_intervalle <- function(N,err_app, err_tst) {
   # calcul intervalle de confiance pour app
   app_intervalle_gauche <- err_app - 1.96 * ecart_type / sqrt(N)
   app_intervalle_droite <- err_app + 1.96 * ecart_type / sqrt(N)
-  res$app_inter_gauche <- app_intervalle_gauche
-  res$app_inter_droite <- app_intervalle_droite
+  res$app_inter_gauche <- mean(app_intervalle_gauche)
+  res$app_inter_droite <- mean(app_intervalle_droite)
   
   epsilon_tst <- mean(err_tst)
   res$taux_tst <- epsilon_tst
@@ -166,10 +160,25 @@ taux_intervalle <- function(N,err_app, err_tst) {
   tst_intervalle_gauche <- err_tst - 1.96 * ecart_type / sqrt(N)
   tst_intervalle_droite <- err_tst + 1.96 * ecart_type / sqrt(N)
   
-  res$tst_inter_gauche <- tst_intervalle_gauche
-  res$tst_inter_droite <- tst_intervalle_droite
+  res$tst_inter_gauche <- mean(tst_intervalle_gauche)
+  res$tst_inter_droite <- mean(tst_intervalle_droite)
   res
 }
+
+
+
+# for (dataset in all_dataset) {
+#   X <- dataset[, 1 : 2]
+#   z <- dataset[, 3]
+#   print(dataset$title)
+#   X2 = separ1(X, z)
+#   Xapp <- as.matrix(X2$Xapp)
+#   zapp <- X2$zapp
+#   Xtst <- as.matrix(X2$Xtst)
+#   ztst <- X2$ztst
+#   l2 <- kppv.tune(Xapp, zapp, Xapp, zapp, c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+#   print(l2)
+# }
 
 # errorCeuc <- erreur_ceuc(20,X,z)
 # taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
@@ -197,8 +206,15 @@ erreur_kppv <- function(N,X,z){
   res
 }
 
-# errorKppv = erreur_kppv(20, X, z)
-# taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
+# for (dataset in all_dataset) {
+#   X <- dataset[, 1 : 2]
+#   z <- dataset[, 3]
+#   errorKppv = erreur_kppv(20, X, z)
+#   taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
+#   print(dataset$title)
+#   print(taux_kppv)
+# }
+
 
 # X <- Synth2_1000[, 1 : 2]
 # z <- Synth2_1000[, 3]
@@ -207,3 +223,21 @@ erreur_kppv <- function(N,X,z){
 # taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
 # errorKppv = erreur_kppv(20, X, z)
 # taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
+
+# Pima <- read.csv("TP3/dataset/donnees-tp3/Pima.csv")
+# X <- Pima[, 1 : 7]
+# z <- Pima[, 8]
+# params_pima <- estimation_params(X,z)
+# errorCeuc <- erreur_ceuc(20,X,z)
+# taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
+# errorKppv = erreur_kppv(20, X, z)
+# taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
+
+Breastcancer <- read.csv("TP3/dataset/donnees-tp3/Breastcancer.csv")
+X <- Breastcancer[, 1 : 9]
+z <- Breastcancer[, 10]
+params_breastcancer <- estimation_params(X,z)
+errorCeuc <- erreur_ceuc(20,X,z)
+taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
+errorKppv = erreur_kppv(20, X, z)
+taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
