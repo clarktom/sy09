@@ -1,14 +1,18 @@
 donn <- read.csv("TP3/dataset/donnees-tp3/Synth1-40.csv")
 Synth1_40 <- read.csv("TP3/dataset/donnees-tp3/Synth1-40.csv")
+Synth1_40$title <- "synth1_40"
 Synth1_100 <- read.csv("TP3/dataset/donnees-tp3/Synth1-100.csv")
+Synth1_100$title <- "synth1_100"
 Synth1_1000 <- read.csv("TP3/dataset/donnees-tp3/Synth1-1000.csv")
+Synth1_1000$title <- "synth1_1000"
 Synth2_1000 <- read.csv("TP3/dataset/donnees-tp3/Synth2-1000.csv")
+Synth2_1000$title <- "synth2_1000"
 X <- as.matrix(Synth1_40[, 1 : 2])
 z <- Synth1_40[, 3]
 X <- donn[,1:2]
 z <- donn[,3]
 source("TP3/script/distXY.r")
-
+library(xtable)
 
 ceuc.app <- function(Xapp, zapp){
   mu <-matrix(,nrow=length(unique(zapp)),ncol(Xapp))
@@ -93,12 +97,13 @@ estimation_params <- function(X,z){
   sigma <- list()
   pi <- c()
   params <- NA
-  i <- 1
+  i <- 0
   for (k in classes){#pour chaque classes
-    Xk <- X[z==k,]
+    i <- i+1
+    X_k <- X[z==k,]
     mu_k <- apply(X_k, MARGIN=2, mean)
     mu[i,] <- mu_k
-    sigma[[i]] <- cov(Xk)
+    sigma[[i]] <- cov(X_k)
     piK <- length(z[z == k]) / length(z)
     pi <- c(pi, piK)
   }
@@ -108,15 +113,15 @@ estimation_params <- function(X,z){
   params
 }
 
-# all_dataset <- list(Synth1_40, Synth1_100, Synth1_1000, Synth2_1000)
-# 
-# for (dataset in all_dataset) {
-#   X <- learningSet[, 1 : 2]
-#   z <- learningSet[, 3]
-#   res <- estimation_params(X,z)
-#   
-#   print(res)
-# }
+all_dataset <- list(Synth1_40, Synth1_100, Synth1_1000, Synth2_1000)
+
+for (dataset in all_dataset) {
+  X <- dataset[, 1 : 2]
+  z <- dataset[, 3]
+  res <- estimation_params(X,z)
+  print(dataset$title)
+  print(res)
+}
 
 erreur_ceuc <- function(N,X,z){
   err_app <- c()
@@ -195,10 +200,10 @@ erreur_kppv <- function(N,X,z){
 # errorKppv = erreur_kppv(20, X, z)
 # taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
 
-X <- Synth2_1000[, 1 : 2]
-z <- Synth2_1000[, 3]
-params_synth2_1000 <- estimation_params(X,z)
-errorCeuc <- erreur_ceuc(20,X,z)
-taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
-errorKppv = erreur_kppv(20, X, z)
-taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
+# X <- Synth2_1000[, 1 : 2]
+# z <- Synth2_1000[, 3]
+# params_synth2_1000 <- estimation_params(X,z)
+# errorCeuc <- erreur_ceuc(20,X,z)
+# taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
+# errorKppv = erreur_kppv(20, X, z)
+# taux_kppv = taux_intervalle(20, errorKppv$err_app, errorKppv$err_tst)
