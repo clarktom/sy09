@@ -19,18 +19,18 @@ library(xtable)
 ceuc.app <- function(Xapp, zapp){
   mu <-matrix(,nrow=length(unique(zapp)),ncol(Xapp))
   for (i in 1:(length(unique(zapp)))){
-    mu[i,]<-apply(Xapp[which(zapp==i),],2,mean)
+    mu[i,]<-apply(Xapp[z==i,],MARGIN=2,mean)
   }
   mu
 }
 
 ceuc.val <- function(mu, Xtst) {
-  etiquette<-matrix(,nrow=nrow(Xtst),1)
-  distTab <- distXY(mu, Xtst)
+  z<-matrix(,nrow=nrow(Xtst),1)
+  dist <- distXY(mu, Xtst)
   for (i in 1:(nrow(Xtst))){
-    etiquette[i,] <- which.min(distTab[,i])
+    z[i,] <- which.min(dist[,i])
   }
-  etiquette
+  z
 }
 
 kppv.val<-function(Xapp,zapp,K,Xtst){
@@ -71,14 +71,12 @@ kppv.val<-function(Xapp,zapp,K,Xtst){
 kppv.tune <- function(Xapp, zapp, Xval, zval, nppv) {
   Xapp <- as.matrix(Xapp)
   Xval <- as.matrix(Xval)
-  zapp <- as.vector(zapp)
-  zval <- as.vector(zval)
-  res = c(1:length(nppv)) #contiendra le taux d'erreur pour chaque valeur de ppv
-  for(i in 1:length(nppv)) { #Pour chaque valeur de ppv
-    kppv_v <- kppv.val(Xapp, zapp, i, Xval) #On cherche le vecteur des étiquettes
-    res[i] <- sum(zval == kppv_v)
+  res <- c() 
+  for(i in 1:length(nppv)) {
+    kppv_v <- kppv.val(Xapp, zapp, i, Xval) 
+    res <- c(res,sum(zval == kppv_v))
   }
-  res
+  which.max(res)
 }
 
 estimation_params <- function(X,z){
@@ -181,8 +179,8 @@ taux_intervalle <- function(N,err_app, err_tst) {
 #   print(l2)
 # }
 
-# errorCeuc <- erreur_ceuc(20,X,z)
-# taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
+errorCeuc <- erreur_ceuc(20,X,z)
+taux_ceuc <- taux_intervalle(20,errorCeuc$err_app, errorCeuc$err_tst)
 
 erreur_kppv <- function(N,X,z){
   err_app <- c()
