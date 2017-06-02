@@ -1,3 +1,4 @@
+library(ggplot2)
 front.ceuc <- function(X, z, mu, discretisation=50)
 {
     deltaX <- (max(X[,1])-min(X[,1]))/discretisation
@@ -16,6 +17,7 @@ front.ceuc <- function(X, z, mu, discretisation=50)
 
     # calcul des valeurs de la fonction 
     valf <- ceuc.val(mu, grille)
+    # ggplot(X, aes(x=grilleX, y=grilleY, z=valf)) + geom_point(colour=z) + geom_contour()
     plot(X, col=c("red","green","blue","magenta","orange")[z], asp=1)
     contour(grilleX, grilleY, matrix(valf,nrow=naffX,byrow=T), add=T, drawlabels=FALSE, levels=1.5)
 }
