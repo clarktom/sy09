@@ -5,7 +5,7 @@ Synth2_1000 <- read.csv("TP4/dataset/donnees/Synth2-1000.csv")
 Synth2_1000$title <- "synth2_1000"
 Synth2_1000 <- read.csv("TP4/dataset/donnees/Synth3-1000.csv")
 Synth2_1000$title <- "synth3_1000"
-source("TP4/script/mvdnorm.r")
+source("TP4/script/fonctions/mvdnorm.r")
 # Analyse quadratique soit mu_{k}, sigma_{k} différents
 
 adq.app <- function(Xapp, zapp)
@@ -100,10 +100,10 @@ ad.val <- function(param, Xtst)
 	out <- NULL
 
 	prob <- matrix(0, nrow=n, ncol=g)
-  # calculer densités conditionnelles
+  # calculer densités conditionnelles avec mvdnorm()
 	for (k in 1:g)
 	{
-		prob[,k] <-  # p88 - potentiellement faux mais potentiellement vrai
+		prob[,k] <- mvdnorm(Xtst[z==k,], param$mean[k,], param$MCov[,,k])  # densité conditionnelle f1(x) => prob[1] ou f2(x) => prob[2]
 	}
 	# prob  = résoudre système d'équations avec prob[1]/prob[2]=cste et prob[1] + prob[2] = 1
 	prob <- 
