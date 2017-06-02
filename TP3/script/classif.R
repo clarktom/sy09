@@ -130,7 +130,7 @@ erreur_ceuc <- function(N,X,z){
     res_zapp <- ceuc.val(mu, Xapp)
     res_ztst <- ceuc.val(mu, Xtst)
     err_app[i] <- 1 - (sum(zapp == res_zapp) / length(zapp))
-    err_tst[i] <- 1 - (sum(ztst == res_ztst) / length(zapp))
+    err_tst[i] <- 1 - (sum(ztst == res_ztst) / length(ztst))
   }
   res <- NULL
   res$err_app <- err_app
@@ -198,14 +198,14 @@ erreur_kppv <- function(N,X,z){
     res_zapp <- kppv.val(Xapp, zapp, K, Xapp)
     res_ztst <- kppv.val(Xapp, zapp, K, Xtst)
     err_app[i] <- 1 - sum(zapp == res_zapp) / length(zapp)
-    err_tst[i] <- 1 - sum(ztst == res_ztst) / length(zapp)
+    err_tst[i] <- 1 - sum(ztst == res_ztst) / length(ztst)
   }
   res <- NULL
   res$err_app <- err_app
   res$err_tst <- err_tst
   res
 }
-
+# 
 # for (dataset in all_dataset) {
 #   X <- dataset[, 1 : 2]
 #   z <- dataset[, 3]
@@ -215,7 +215,7 @@ erreur_kppv <- function(N,X,z){
 #   print(taux_kppv)
 # }
 
-
+# 
 # X <- Synth2_1000[, 1 : 2]
 # z <- Synth2_1000[, 3]
 # params_synth2_1000 <- estimation_params(X,z)
