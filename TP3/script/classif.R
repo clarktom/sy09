@@ -63,6 +63,7 @@ kppv.val<-function(Xapp,zapp,K,Xtst){
       z[i] <- 2
     else
       z[i] <- 1
+
   }
   z
 }
