@@ -24,8 +24,6 @@ adq.app <- function(Xapp, zapp)
 	{
 		indk <- which(zapp==k)
 		X_k <- Xapp[z==k,]
-		print(X_k)
-		print(cov(X_k))
 		param$MCov[,,k] <- cov(X_k)
 		param$mean[k,] <-  apply(X_k, MARGIN=2, mean)
 		param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
@@ -74,17 +72,16 @@ nba.app <- function(Xapp, zapp)
   g <- max(unique(zapp))
   
   param <- NULL
-  param$MCov <- array(0, c(p,p,g))
+  param$MCov <- array(0, c(p,p,g)) # Matrice de covariance, une diagonale de Vk
   param$mean <- array(0, c(g,p))
   param$prop <- rep(0, g)
   
   for (k in 1:g)
   {
-    indk <- which(zapp==k)
+    nk <- length(which(zapp==k)) # Nombre d'individus de la classe k
     X_k <- Xapp[z==k,]
-    print(X_k)
-    print(cov(X_k))
-    param$MCov[,,k] <- cov(X_k)
+    Vk <- cov(X_k) #Matrice de covariance de la classe k
+    param$MCov[,,k] <- diag(diag(Vk))
     param$mean[k,] <-  apply(X_k, MARGIN=2, mean)
     param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
   }
