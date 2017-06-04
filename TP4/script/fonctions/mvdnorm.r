@@ -1,3 +1,4 @@
+library(MASS)
 mvdnorm <- function(X, mu, Sigma)
 {
 	X <- as.matrix(X)

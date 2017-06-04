@@ -1,10 +1,5 @@
 # Analyse discriminante 
-Synth1_1000 <- read.csv("TP4/dataset/donnees/Synth1-1000.csv")
-Synth1_1000$title <- "synth1_1000"
-Synth2_1000 <- read.csv("TP4/dataset/donnees/Synth2-1000.csv")
-Synth2_1000$title <- "synth2_1000"
-Synth2_1000 <- read.csv("TP4/dataset/donnees/Synth3-1000.csv")
-Synth2_1000$title <- "synth3_1000"
+
 source("TP4/script/fonctions/mvdnorm.r")
 # Analyse quadratique soit mu_{k}, sigma_{k} différents
 
@@ -23,7 +18,7 @@ adq.app <- function(Xapp, zapp)
 	for (k in 1:g)
 	{
 		indk <- which(zapp==k)
-		X_k <- Xapp[z==k,]
+		X_k <- Xapp[zapp==k,]
 		param$MCov[,,k] <- cov(X_k)
 		param$mean[k,] <-  apply(X_k, MARGIN=2, mean)
 		param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
@@ -49,7 +44,7 @@ adl.app <- function(Xapp, zapp)
 	for (k in 1:g)
 	{
 		nk <- length(which(zapp==k)) # Nombre d'individus de la classe k
-		X_k <- Xapp[z==k,] # Individus de la classe k
+		X_k <- Xapp[zapp==k,] # Individus de la classe k
 		Vk <- cov(X_k) #Matrice de covariance de la classe k
 		sum_MCov <- sum_MCov + (nk - 1) * Vk
 		param$mean[k,] <- apply(X_k, MARGIN=2, mean)
@@ -99,13 +94,16 @@ ad.val <- function(param, Xtst)
 	out <- NULL
 
 	prob <- matrix(0, nrow=n, ncol=g)
-  # calculer densités conditionnelles avec mvdnorm()
-	for (k in 1:g)
-	{
-		prob[,k] <- mvdnorm(Xtst[z==k,], param$mean[k,], param$MCov[,,k])  # densité conditionnelle f1(x) => prob[1] ou f2(x) => prob[2]
+	deno <- 0
+	for (k in 1:g){
+	  dens <- mvdnorm(Xtst, param$mean[,k], param$MCov[,,k])  # densité conditionnelle f1(x) => prob[1] ou f2(x) => prob[2]
+	  print(dens)
+		prob[,k] <- param$prop[k] * dens
+		deno <- deno + prob[,k]
 	}
-	# prob  = résoudre système d'équations avec prob[1]/prob[2]=cste et prob[1] + prob[2] = 1
-	prob <- 
+	for (k in 1:g){
+	  prob[,k] <- prob[,k] / deno
+	}
 	pred <- max.col(prob)
 
 	out$prob <- prob

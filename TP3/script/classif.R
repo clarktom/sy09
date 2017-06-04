@@ -19,16 +19,16 @@ library(xtable)
 ceuc.app <- function(Xapp, zapp){
   mu <-matrix(,nrow=length(unique(zapp)),ncol(Xapp))
   for (i in 1:(length(unique(zapp)))){
-    mu[i,]<-apply(Xapp[z==i,],MARGIN=2,mean)
+    mu[i,]<-apply(Xapp[z==i,],MARGIN=2,mean) # centre de gravité = moyenne
   }
   mu
 }
 
 ceuc.val <- function(mu, Xtst) {
   z<-matrix(,nrow=nrow(Xtst),1)
-  dist <- distXY(mu, Xtst)
+  dist <- distXY(mu, Xtst) # distance euclidienne
   for (i in 1:(nrow(Xtst))){
-    z[i,] <- which.min(dist[,i])
+    z[i,] <- which.min(dist[,i]) #on cherche le minimum de la distance aux centre de gravié
   }
   z
 }
@@ -73,10 +73,10 @@ kppv.tune <- function(Xapp, zapp, Xval, zval, nppv) {
   Xval <- as.matrix(Xval)
   res <- c() 
   for(i in 1:length(nppv)) {
-    kppv_v <- kppv.val(Xapp, zapp, i, Xval) 
-    res <- c(res,sum(zval == kppv_v))
+    kppv_v <- kppv.val(Xapp, zapp, i, Xval) #on détermine le z
+    res <- c(res,sum(zval == kppv_v)) # on regarde les cas où le résultat est bon par aux étiquettes
   }
-  which.max(res)
+  which.max(res) # et on renvoie la meilleure valeur
 }
 
 estimation_params <- function(X,z){
