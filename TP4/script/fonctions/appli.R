@@ -7,6 +7,7 @@ Synth2_1000$title <- "synth3_1000"
 
 source("TP4/script/fonctions/anadisc.R")
 source("TP4/script/fonctions/separ1.R")
+source("TP4/script/fonctions/prob.ad.R")
 
 X <- Synth1_1000[,1:2]
 z <- Synth1_1000[,3]
@@ -16,5 +17,6 @@ data_synth <- separ1(X,z)
 adl <- adl.app(data_synth$Xapp,data_synth$zapp)
 adq <- adq.app(data_synth$Xapp,data_synth$zapp)
 nba <- nba.app(data_synth$Xapp,data_synth$zapp)
+# val <- ad.val(adl,data_synth$Xtst)
 
-ad.val(adl,data_synth$Xtst)
+prob.ad(nba, data_synth$Xtst, data_synth$ztst, 0.5)

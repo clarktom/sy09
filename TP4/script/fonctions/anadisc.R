@@ -7,7 +7,6 @@ adq.app <- function(Xapp, zapp)
 {
 	n <- dim(Xapp)[1]
 	p <- dim(Xapp)[2]
-	print(p)
 	g <- max(unique(zapp))
 
 	param <- NULL
@@ -20,7 +19,7 @@ adq.app <- function(Xapp, zapp)
 		indk <- which(zapp==k)
 		X_k <- Xapp[zapp==k,]
 		param$MCov[,,k] <- cov(X_k)
-		param$mean[k,] <-  apply(X_k, MARGIN=2, mean)
+		param$mean[,k] <-  apply(X_k, MARGIN=2, mean)
 		param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
 	}
 
@@ -47,7 +46,7 @@ adl.app <- function(Xapp, zapp)
 		X_k <- Xapp[zapp==k,] # Individus de la classe k
 		Vk <- cov(X_k) #Matrice de covariance de la classe k
 		sum_MCov <- sum_MCov + (nk - 1) * Vk
-		param$mean[k,] <- apply(X_k, MARGIN=2, mean)
+		param$mean[,k] <- apply(X_k, MARGIN=2, mean)
 		param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
 	}
 	MCov <- 1/(n - g) * sum_MCov # Matrice commune dans toutes les classes
@@ -77,7 +76,7 @@ nba.app <- function(Xapp, zapp)
     X_k <- Xapp[z==k,]
     Vk <- cov(X_k) #Matrice de covariance de la classe k
     param$MCov[,,k] <- diag(diag(Vk))
-    param$mean[k,] <-  apply(X_k, MARGIN=2, mean)
+    param$mean[,k] <-  apply(X_k, MARGIN=2, mean)
     param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
   }
   
@@ -97,7 +96,6 @@ ad.val <- function(param, Xtst)
 	deno <- 0
 	for (k in 1:g){
 	  dens <- mvdnorm(Xtst, param$mean[,k], param$MCov[,,k])  # densité conditionnelle f1(x) => prob[1] ou f2(x) => prob[2]
-	  print(dens)
 		prob[,k] <- param$prop[k] * dens
 		deno <- deno + prob[,k]
 	}
