@@ -43,19 +43,21 @@ adl.app <- function(Xapp, zapp)
 
 	param <- NULL
 	MCov <- array(0, c(p,p))
+	sum_MCov <- 0 # Store le produit des nk*Vk
 	param$MCov <- array(0, c(p,p,g))
 	param$mean <- array(0, c(g,p))
 	param$prop <- rep(0, g)
-
+  
 	for (k in 1:g)
 	{
-		indk <- which(zapp==k)
-		X_k <- Xapp[z==k,]
-		MCov <- cov(X_k)
+		nk <- length(which(zapp==k)) # Nombre d'individus de la classe k
+		X_k <- Xapp[z==k,] # Individus de la classe k
+		Vk <- cov(X_k) #Matrice de covariance de la classe k
+		sum_MCov <- sum_MCov + (nk - 1) * Vk
 		param$mean[k,] <- apply(X_k, MARGIN=2, mean)
 		param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
 	}
-	MCov <- cov(X_k)
+	MCov <- 1/(n - g) * sum_MCov # Matrice commune dans toutes les classes
 	for (k in 1:g)
 	{
 		param$MCov[,,k] <- MCov
