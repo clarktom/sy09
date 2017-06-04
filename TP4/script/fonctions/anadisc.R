@@ -73,8 +73,9 @@ nba.app <- function(Xapp, zapp)
   for (k in 1:g)
   {
     nk <- length(which(zapp==k)) # Nombre d'individus de la classe k
-    X_k <- Xapp[z==k,]
+    X_k <- Xapp[zapp==k,]
     Vk <- cov(X_k) #Matrice de covariance de la classe k
+    print(Vk)
     param$MCov[,,k] <- diag(diag(Vk))
     param$mean[,k] <-  apply(X_k, MARGIN=2, mean)
     param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
