@@ -56,8 +56,6 @@ log.val <- function(beta, Xtst){
   
   res$prob_prio <- array(0, c(n,2))
   beta_matrix <- matrix(rep(t(beta),n),nrow=n,byrow=T)
-  print(beta_matrix)
-  print(Xtst)
   numerator <- exp(rowSums(beta_matrix*Xtst))
   prob_prio <- numerator/(1+numerator)
   res$prob_prio[,1] <- prob_prio
