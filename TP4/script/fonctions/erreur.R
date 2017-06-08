@@ -44,3 +44,30 @@ erreur <- function(N,X,z,method){
   res$err_tst <- err_tst
   res
 }
+
+taux_intervalle <- function(N,err_app, err_tst) {
+  res <- NULL
+  # calcul moyenne, variance et écart type induit
+  epsilon_app <- mean(err_app)
+  res$taux_app <- epsilon_app
+  variance = sum((err_app - epsilon_app)^2)/(N - 1)
+  ecart_type <- sqrt(variance) # sd
+  # 95% => 1.960
+  # calcul intervalle de confiance pour app
+  app_intervalle_gauche <- err_app - 1.96 * ecart_type / sqrt(N)
+  app_intervalle_droite <- err_app + 1.96 * ecart_type / sqrt(N)
+  res$app_inter_gauche <- mean(app_intervalle_gauche)
+  res$app_inter_droite <- mean(app_intervalle_droite)
+  
+  epsilon_tst <- mean(err_tst)
+  res$taux_tst <- epsilon_tst
+  variance = sum((err_tst - epsilon_tst)^2)/(N - 1)
+  ecart_type <- sqrt(variance) # sd
+  
+  tst_intervalle_gauche <- err_tst - 1.96 * ecart_type / sqrt(N)
+  tst_intervalle_droite <- err_tst + 1.96 * ecart_type / sqrt(N)
+  
+  res$tst_inter_gauche <- mean(tst_intervalle_gauche)
+  res$tst_inter_droite <- mean(tst_intervalle_droite)
+  res
+}
