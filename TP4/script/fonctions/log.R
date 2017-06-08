@@ -60,7 +60,7 @@ log.val <- function(beta, Xtst){
   prob_prio <- numerator/(1+numerator)
   res$prob_prio[,1] <- prob_prio
   res$prob_prio[,2] <- 1 - prob_prio
-  res$found <- max.col(res$prob_prio)
+  res$pred <- max.col(res$prob_prio)
   res
 }
 
