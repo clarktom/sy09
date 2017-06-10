@@ -1,3 +1,5 @@
+library(MASS)
+
 log.app <- function(Xapp, zapp, intr, epsi)
 {
 	n <- dim(Xapp)[1]
@@ -11,8 +13,7 @@ log.app <- function(Xapp, zapp, intr, epsi)
 		p <- p + 1
 	}
 
-	targ <- matrix(as.numeric(zapp),nrow=n)
-	targ[which(targ==2),] <- 0
+	targ <- as.numeric(zapp==1)
 	tXap <- t(Xapp)
 
 	beta <- matrix(0,nrow=p,ncol=1)
@@ -25,9 +26,12 @@ log.app <- function(Xapp, zapp, intr, epsi)
 		bold <- beta
 
 		prob <- postprob(beta, Xapp)
-		MatW <- 
-
-		beta <- 
+		MatW <- diag(prob*(1-prob)) #
+    MatH <- -tXap %*% MatW %*% Xapp
+    print(targ)
+    print(prob)
+    print(zapp)
+		beta <- bold - ginv(MatH) %*% (tXap %*% (targ - prob))
 
 		if (norm(beta-bold)<epsi)
 		{
@@ -39,7 +43,7 @@ log.app <- function(Xapp, zapp, intr, epsi)
 	out <- NULL
 	out$beta <- beta
 	out$iter <- iter
-	out$logL <- 
+	out$logL <- sum(targ * log(prob) + (1-targ) * log(1-prob))
 
 	out
 }
@@ -57,7 +61,7 @@ log.val <- function(beta, Xtst)
 		Xtst  <- cbind(rep(1,m),Xtst)
 	}
 
-	prob <- 
+	prob <- postprob(beta, Xtst)
 	pred <- max.col(prob)
 
 	out <- NULL
@@ -70,6 +74,10 @@ log.val <- function(beta, Xtst)
 postprob <- function(beta, X)
 {
 	X <- as.matrix(X)
-
-	prob <- 
+	n <- dim(X)[1]
+	beta <- as.matrix(beta)
+	MatB <- matrix(rep(t(beta),n),nrow=n,byrow=T)
+  
+	tmp <- exp(rowSums(MatB * X))
+	prob <- tmp / (1 + tmp)
 }
