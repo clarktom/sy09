@@ -4,6 +4,7 @@ source("TP4/script/fonctions/prob.ad.R")
 source("TP4/script/fonctions/prob.log.R")
 source("TP4/script/fonctions/prob.log2.R")
 source("TP4/script/fonctions/log.R")
+source("TP4/script/fonctions/tree.R")
 
 erreur <- function(N,X,z,method){
   err_app <- c()
@@ -22,6 +23,8 @@ erreur <- function(N,X,z,method){
            adq = ad <- adq.app(Xapp,zapp),
            nba = ad <- nba.app(Xapp,zapp),
            log = ad <- log.app(Xapp,zapp,1,1e-5),
+           tree = ad <- tree.app(Xapp,zapp),
+           rforest = ad <- rforest.app(Xapp,zapp),
            logq = {
              Xappq <- log.quadra(Xapp)
              Xtstq <- log.quadra(Xtst)
@@ -29,8 +32,16 @@ erreur <- function(N,X,z,method){
            }
     )
     if ((method == "log") || (method == "logq")){
-      res_zapp  <- log.val(ad$beta, Xapp)$pred
-      res_ztst  <- log.val(ad$beta, Xtst)$pred
+      res_zapp <- log.val(ad$beta, Xapp)$pred
+      res_ztst <- log.val(ad$beta, Xtst)$pred
+    }
+    else if (method == "tree"){
+      res_zapp <- tree.val(ad, Xapp)
+      res_ztst <- tree.val(ad, Xtst)
+    }
+    else if (method == "rforest"){
+      res_zapp <- rforest.val(ad, Xapp)
+      res_ztst <- rforest.val(ad, Xtst)
     }
     else{
       res_zapp <- ad.val(ad, Xapp)$pred
@@ -45,7 +56,7 @@ erreur <- function(N,X,z,method){
   res
 }
 
-taux_intervalle <- function(N,err_app, err_tst) {
+taux_intervalle <- function(N, err_app, err_tst) {
   res <- NULL
   # calcul moyenne, variance et écart type induit
   epsilon_app <- mean(err_app)
