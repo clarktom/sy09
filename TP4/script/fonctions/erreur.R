@@ -4,7 +4,7 @@ source("TP4/script/fonctions/prob.ad.R")
 source("TP4/script/fonctions/prob.log.R")
 source("TP4/script/fonctions/prob.log2.R")
 source("TP4/script/fonctions/log.R")
-source("TP4/script/fonctions/tree.R")
+#source("TP4/script/fonctions/tree.R")
 
 erreur <- function(N,X,z,method){
   err_app <- c()
