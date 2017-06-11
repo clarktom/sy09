@@ -46,7 +46,6 @@ adl.app <- function(Xapp, zapp)
 		X_k <- Xapp[zapp==k,] # Individus de la classe k
 		Vk <- cov(X_k) #Matrice de covariance de la classe k
 		sum_MCov <- sum_MCov + (nk - 1) * Vk
-		print(apply(X_k, MARGIN=2, mean))
 		param$mean[k,] <- apply(X_k, MARGIN=2, mean)
 		param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
 	}
@@ -63,7 +62,6 @@ nba.app <- function(Xapp, zapp)
 {
   n <- dim(Xapp)[1]
   p <- dim(Xapp)[2]
-  print(p)
   g <- max(unique(zapp))
   
   param <- NULL
@@ -76,7 +74,6 @@ nba.app <- function(Xapp, zapp)
     nk <- length(which(zapp==k)) # Nombre d'individus de la classe k
     X_k <- Xapp[zapp==k,]
     Vk <- cov(X_k) #Matrice de covariance de la classe k
-    print(Vk)
     param$MCov[,,k] <- diag(diag(Vk))
     param$mean[k,] <-  apply(X_k, MARGIN=2, mean)
     param$prop[k] <- length(zapp[zapp == k]) / length(zapp)
@@ -86,7 +83,7 @@ nba.app <- function(Xapp, zapp)
 }
 # Probabilités à posteriori
 # page 88
-ad.val <- function(param, Xtst)
+ad.val <- function(param, Xtst, method)
 {
 	n <- dim(Xtst)[1]
 	p <- dim(Xtst)[2]
@@ -97,7 +94,7 @@ ad.val <- function(param, Xtst)
 	prob <- matrix(0, nrow=n, ncol=g)
 	deno <- 0
 	for (k in 1:g){
-	  dens <- mvdnorm(Xtst, param$mean[k,], param$MCov[,,k])  # densité conditionnelle f1(x) => prob[1] ou f2(x) => prob[2]
+	  dens <- mvdnorm(Xtst, param$mean[k,], param$MCov[,,k], method)  # densité conditionnelle f1(x) => prob[1] ou f2(x) => prob[2]
 		prob[,k] <- param$prop[k] * dens
 		deno <- deno + prob[,k]
 	}

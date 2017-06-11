@@ -44,9 +44,11 @@ erreur <- function(N,X,z,method){
       res_ztst <- rforest.val(ad, Xtst)
     }
     else{
-      res_zapp <- ad.val(ad, Xapp)$pred
-      res_ztst <- ad.val(ad, Xtst)$pred
+      res_zapp <- ad.val(ad, Xapp, method)$pred
+      res_ztst <- ad.val(ad, Xtst, method)$pred
     }
+    res_zapp <- na.omit(res_zapp)
+    res_ztst <- na.omit(res_ztst)
     err_app[i] <- 1 - (sum(zapp == res_zapp) / length(zapp))
     err_tst[i] <- 1 - (sum(ztst == res_ztst) / length(ztst))
   }

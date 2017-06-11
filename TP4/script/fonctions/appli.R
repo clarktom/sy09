@@ -6,7 +6,9 @@ Synth2_1000 <- read.csv("TP4/dataset/donnees/Synth2-1000.csv")
 Synth2_1000$title <- "synth2_1000"
 Synth3_1000 <- read.csv("TP4/dataset/donnees/Synth3-1000.csv")
 Synth3_1000$title <- "synth3_1000"
+Spam <- read.csv("TP4/dataset/donnees/spam.csv",  header=T)
 Pima <- read.csv("TP4/dataset/donnees/Pima.csv", header=T)
+BCW <- read.csv("TP4/dataset/donnees/bcw.csv", header=T)
 
 source("TP4/script/fonctions/anadisc.R")
 source("TP4/script/fonctions/separ1.R")
@@ -16,26 +18,28 @@ source("TP4/script/fonctions/prob.log2.R")
 source("TP4/script/fonctions/logistic.R")
 source("TP4/script/fonctions/log.R")
 source("TP4/script/fonctions/erreur.R")
+# Spam <- Spam[,-33]
+# Spam <- Spam[,-39]
 
-X <- Pima[,1:7]
-z <- Pima[,8]
+X <- Spam[,2:58]
+z <- Spam[,59]
 
-  
+
 data_synth <- separ1(X,z)
 
 adl <- adl.app(data_synth$Xapp,data_synth$zapp)
 adq <- adq.app(data_synth$Xapp,data_synth$zapp)
-nba <- nba.app(data_synth$Xapp,data_synth$zapp)
-log <- log.app(data_synth$Xapp,data_synth$zapp,1,1e-5)
-Xappq <- log.quadra(data_synth$Xapp)
-Xtstq <- log.quadra(data_synth$Xtst)
-logq <- log.app(Xappq, data_synth$zapp,1,1e-5)
+# nba <- nba.app(data_synth$Xapp,data_synth$zapp)
+# log <- log.app(data_synth$Xapp,data_synth$zapp,0,1e-5)
+# Xappq <- log.quadra(data_synth$Xapp)
+# Xtstq <- log.quadra(data_synth$Xtst)
+#logq <- log.app(Xappq, data_synth$zapp,1,1e-5)
 # val <- ad.val(adl,data_synth$Xtst)
-err_adl <- erreur(20,X,z,"adl")
-err_adq <- erreur(20,X,z,"adq")
-err_nba <- erreur(20,X,z,"nba")
-err_log <- erreur(20,X,z,"log")
-err_logq <- erreur(20,X,z,"logq")
+#err_adl <- erreur(20,X,z,"adl")
+#err_adq <- erreur(20,X,z,"adq")
+#err_nba <- erreur(20,X,z,"nba")
+#err_log <- erreur(20,X,z,"log")
+err_logq <- erreur(100,X,z,"logq")
 # prob.ad(nba,data_synth$Xtst, data_synth$ztst, 0.5)
 # prob.log(log$beta, data_synth$Xtst, data_synth$ztst, 0.5)
 # prob.log2(logq$beta, data_synth$Xtst, data_synth$ztst, 0.5)
