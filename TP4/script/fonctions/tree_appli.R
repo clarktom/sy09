@@ -54,19 +54,70 @@ table(df$V1, predict(treeOptimal, data$Xtst, type="class"))
 #z <- Donn[,58]
 
 source("TP4/script/fonctions/erreur.R")
-err_tree <- erreur(20, X, z, "tree")
-taux_intervalle <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
-taux_intervalle
+
+Synth1_1000 <- read.csv("TP4/dataset/donnees/Synth1-1000.csv")
+Synth1_1000$title <- "synth1_1000"
+Synth2_1000 <- read.csv("TP4/dataset/donnees/Synth2-1000.csv")
+Synth2_1000$title <- "synth2_1000"
+Synth3_1000 <- read.csv("TP4/dataset/donnees/Synth3-1000.csv")
+Synth3_1000$title <- "synth3_1000"
 
 source("TP4/script/fonctions/erreur.R")
+X <- NULL
+z <- NULL
+X <- Synth1_1000[,1:2]
+z <- Synth1_1000[,3]
+err_tree <- NULL
+taux <- NULL
 err_tree <- erreur(20, X, z, "tree")
-taux_intervalle <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
-taux_intervalle
+taux <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
+taux
 
 source("TP4/script/fonctions/erreur.R")
-err_tree <- erreur(20, X, z, "rforest")
-taux_intervalle <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
-taux_intervalle
+X <- NULL
+z <- NULL
+X <- Synth2_1000[,1:2]
+z <- Synth2_1000[,3]
+err_tree <- NULL
+taux <- NULL
+err_tree <- erreur(20, X, z, "tree")
+taux <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
+taux
+
+source("TP4/script/fonctions/erreur.R")
+X <- NULL
+z <- NULL
+X <- Synth3_1000[,1:2]
+z <- Synth3_1000[,3]
+err_tree <- NULL
+taux <- NULL
+err_tree <- erreur(20, X, z, "tree")
+taux <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
+taux
+
+Pima <- read.csv("TP4/dataset/donnees/Pima.csv", header=T)
+source("TP4/script/fonctions/erreur.R")
+X <- NULL
+z <- NULL
+X <- Pima[,1:7]
+z <- Pima[,8]
+err_tree <- NULL
+taux <- NULL
+err_tree <- erreur(20, X, z, "tree")
+taux <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
+taux
+
+bcw <- read.csv("TP4/dataset/donnees/bcw.csv", header=T)
+source("TP4/script/fonctions/erreur.R")
+X <- NULL
+z <- NULL
+X <- bcw[,1:9]
+z <- bcw[,10]
+err_tree <- NULL
+taux <- NULL
+err_tree <- erreur(20, X, z, "tree")
+taux <- taux_intervalle(20, err_tree$err_app, err_tree$err_tst)
+taux
 
 
 

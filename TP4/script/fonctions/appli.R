@@ -20,6 +20,11 @@ source("TP4/script/fonctions/erreur.R")
 X <- Pima[,1:7]
 z <- Pima[,8]
 
+X <- NULL
+z <- NULL
+X <- Synth1_1000[,1:2]
+z <- Synth1_1000[,3]
+
   
 data_synth <- separ1(X,z)
 
@@ -39,3 +44,7 @@ err_logq <- erreur(20,X,z,"logq")
 # prob.ad(nba,data_synth$Xtst, data_synth$ztst, 0.5)
 # prob.log(log$beta, data_synth$Xtst, data_synth$ztst, 0.5)
 # prob.log2(logq$beta, data_synth$Xtst, data_synth$ztst, 0.5)
+
+pred <- prediction(err_adl$preds, err_adl$labels)
+perf <- performance(pred, measure = "tpr", x.measure="fpr")
+plot(perf, col=rainbow(10))

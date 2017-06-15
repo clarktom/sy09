@@ -4,7 +4,7 @@ source("TP4/script/fonctions/prob.ad.R")
 source("TP4/script/fonctions/prob.log.R")
 source("TP4/script/fonctions/prob.log2.R")
 source("TP4/script/fonctions/log.R")
-#source("TP4/script/fonctions/tree.R")
+source("TP4/script/fonctions/tree.R")
 
 erreur <- function(N,X,z,method){
   err_app <- c()
@@ -18,6 +18,10 @@ erreur <- function(N,X,z,method){
     zapp <- splitted$zapp
     Xtst <- splitted$Xtst
     ztst <- splitted$ztst
+    # print(summary(Xapp))
+    # print(summary(zapp))
+    # print(summary(Xtst))
+    # print(summary(ztst))
     switch(method, 
            adl =  ad <- adl.app(Xapp,zapp),
            adq = ad <- adq.app(Xapp,zapp),
@@ -44,7 +48,9 @@ erreur <- function(N,X,z,method){
       res_ztst <- rforest.val(ad, Xtst)
     }
     else{
+      #print(ad)
       res_zapp <- ad.val(ad, Xapp)$pred
+      # print(summary(res_zapp)) # NA ICI
       res_ztst <- ad.val(ad, Xtst)$pred
     }
     err_app[i] <- 1 - (sum(zapp == res_zapp) / length(zapp))
@@ -53,6 +59,8 @@ erreur <- function(N,X,z,method){
   res <- NULL
   res$err_app <- err_app
   res$err_tst <- err_tst
+  # res$preds <- res_ztst
+  # res$labels <- ztst 
   res
 }
 
