@@ -10,7 +10,7 @@ dataset <- read.csv("TP4/dataset/donnees/spam.csv", header=T)
 X <- dataset[,2:58]
 z <- dataset[,59]
 
-pca <- prcomp(X)
+pca <- princomp(X)
 # Standard derivation
 # pca$sdev
 # Loadings :
@@ -23,14 +23,8 @@ summary(pca)
 # Plot the data in the new PC plan
 # plot(pca)
 
-X <- as.data.frame(pca$x[,1:2])
+X <- as.data.frame(pca$x[,1:5])
 
-
-Synth1_40 <- read.csv("TP4/dataset/donnees/Synth1-40.csv")
-Synth1_40$title <- "synth1_40"
-
-X <- Synth1_40[,1:2]
-z <- Synth1_40[,3]
 
 err_adl <- NULL
 err_adq <- NULL

@@ -7,7 +7,7 @@ Synth2_1000$title <- "synth2_1000"
 Synth3_1000 <- read.csv("TP4/dataset/donnees/Synth3-1000.csv")
 Synth3_1000$title <- "synth3_1000"
 Pima <- read.csv("TP4/dataset/donnees/Pima.csv", header=T)
-
+library(pROC)
 source("TP4/script/fonctions/anadisc.R")
 source("TP4/script/fonctions/separ1.R")
 source("TP4/script/fonctions/prob.ad.R")
@@ -17,13 +17,9 @@ source("TP4/script/fonctions/logistic.R")
 source("TP4/script/fonctions/log.R")
 source("TP4/script/fonctions/erreur.R")
 
-X <- Pima[,1:7]
-z <- Pima[,8]
+X <- Synth2_1000[,1:2]
+z <- Synth2_1000[,3]
 
-X <- NULL
-z <- NULL
-X <- Synth1_1000[,1:2]
-z <- Synth1_1000[,3]
 
   
 data_synth <- separ1(X,z)
@@ -35,7 +31,11 @@ log <- log.app(data_synth$Xapp,data_synth$zapp,1,1e-5)
 Xappq <- log.quadra(data_synth$Xapp)
 Xtstq <- log.quadra(data_synth$Xtst)
 logq <- log.app(Xappq, data_synth$zapp,1,1e-5)
-# val <- ad.val(adl,data_synth$Xtst)
+val_adl <- ad.val(adl,data_synth$Xtst)
+val_adq <- ad.val(adq,data_synth$Xtst)
+val_nba <- ad.val(nba,data_synth$Xtst)
+val_log <- log.val(log$beta, data_synth$Xtst)
+val_logq <- log.val(logq$beta, data_synth$Xtst)
 err_adl <- erreur(20,X,z,"adl")
 err_adq <- erreur(20,X,z,"adq")
 err_nba <- erreur(20,X,z,"nba")
@@ -45,6 +45,32 @@ err_logq <- erreur(20,X,z,"logq")
 # prob.log(log$beta, data_synth$Xtst, data_synth$ztst, 0.5)
 # prob.log2(logq$beta, data_synth$Xtst, data_synth$ztst, 0.5)
 
-pred <- prediction(err_adl$preds, err_adl$labels)
-perf <- performance(pred, measure = "tpr", x.measure="fpr")
-plot(perf, col=rainbow(10))
+pred_adl <- prediction(val_adl$prob[,2], data_synth$ztst)
+perf_adl <- performance(pred_adl, measure = "tpr", x.measure="fpr")
+plot(perf_adl, col='black')
+pred_adq <- prediction(val_adq$prob[,2], data_synth$ztst)
+perf_adq <- performance(pred_adq, measure = "tpr", x.measure="fpr")
+plot(perf_adq,add = TRUE, col='orange')
+pred_nba <- prediction(val_nba$prob[,2], data_synth$ztst)
+perf_nba <- performance(pred_nba, measure = "tpr", x.measure="fpr")
+plot(perf_nba, add = TRUE, col='red')
+pred_log <- prediction(val_log$prob[,2], data_synth$ztst)
+perf_log <- performance(pred_log, measure = "tpr", x.measure="fpr")
+plot(perf_log, add = TRUE, col='blue')
+pred_logq <- prediction(val_logq$prob[,2], data_synth$ztst)
+perf_logq <- performance(pred_logq, measure = "tpr", x.measure="fpr")
+abline(0,1, lty=2)
+plot(perf_logq, add = TRUE, col='green')
+# Ajouter une légende
+roc_obj <- roc(data_synth$ztst, val_adl$pred)
+auc_adl <- auc(roc_obj)
+roc_obj <- roc(data_synth$ztst, val_adq$pred)
+auc_adq <- auc(roc_obj)
+roc_obj <- roc(data_synth$ztst, val_nba$pred)
+auc_nba <- auc(roc_obj)
+roc_obj <- roc(data_synth$ztst, val_log$pred)
+auc_log <- auc(roc_obj)
+roc_obj <- roc(data_synth$ztst, val_logq$pred)
+auc_logq <- auc(roc_obj)
+legend(0.7, 0.4, legend=c(paste(c("ADL (",round(auc_adl,digits=3),")"), collapse='') , paste(c("ADQ (" ,round(auc_adq,digits=3),")"), collapse=''), paste(c("NBA (" ,round(auc_nba, digits=3),")"), collapse=''), paste(c("LOG (" ,round(auc_log,digits=3),")"), collapse=''), paste(c("LOGQ (" ,round(auc_logq, digits=3),")"), collapse='')),
+       col=c("black", "orange",  "red", "blue",  "green"), lty=1, cex=0.8)

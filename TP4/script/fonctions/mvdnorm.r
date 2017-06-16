@@ -10,4 +10,7 @@ mvdnorm <- function(X, mu, Sigma)
 	U <- (X-matrix(rep(mu,n),nrow=n,byrow=T))%*%ginv(B)
 
 	dens <- exp(-rowSums(U*U)/2) * (2*pi)^(-p/2) / det(B)
+	dens[dens==0] <- 1e-12
+	
+	dens
 }

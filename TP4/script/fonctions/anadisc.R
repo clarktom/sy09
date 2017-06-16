@@ -98,9 +98,7 @@ ad.val <- function(param, Xtst)
 	deno <- 0
 	for (k in 1:g){
 	  dens <- mvdnorm(Xtst, param$mean[k,], param$MCov[,,k])  # densité conditionnelle f1(x) => prob[1] ou f2(x) => prob[2]
-		# print(dens)
 		# print(param$prop[k])
-	  print(summary(dens))
 	  prob[,k] <- param$prop[k] * dens
 	  # print(prob[,k])
 		deno <- deno + prob[,k]
@@ -113,6 +111,5 @@ ad.val <- function(param, Xtst)
 
 	out$prob <- prob
 	out$pred <- pred
-
 	out
 }
