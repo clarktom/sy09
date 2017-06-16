@@ -17,8 +17,8 @@ source("TP4/script/fonctions/logistic.R")
 source("TP4/script/fonctions/log.R")
 source("TP4/script/fonctions/erreur.R")
 
-X <- Synth2_1000[,1:2]
-z <- Synth2_1000[,3]
+X <- Synth3_1000[,1:2]
+z <- Synth3_1000[,3]
 
 
   
