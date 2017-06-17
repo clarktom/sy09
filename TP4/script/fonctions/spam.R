@@ -11,31 +11,8 @@ dataset <- read.csv("TP4/dataset/donnees/spam.csv", header=T)
 X <- dataset[,2:58]
 z <- dataset[,59]
 
-pca <- princomp(X)
-# Standard derivation
-# pca$sdev
-# Loadings :
-# pca$rotation
-# Loadings = eigen vectors * eigen value
-# loadings are the covariances/correlations between the original variables and the unit-scaled components.
-summary(pca)
-# Porportion of variance : show which PC is the best to describe the data
-# biplot(pca)
-# Plot the data in the new PC plan
-# plot(pca)
-
-X <- as.data.frame(pca$x[,1:5])
 
 
-<<<<<<< HEAD
-=======
-# Synth1_40 <- read.csv("TP4/dataset/donnees/Synth1-40.csv")
-# Synth1_40$title <- "synth1_40"
-# 
-# X <- Synth1_40[,1:2]
-# z <- Synth1_40[,3]
-
->>>>>>> 1eac39fbd309979d91997d2ab46144e0660bc1ea
 err_adl <- NULL
 err_adq <- NULL
 err_nba <- NULL
